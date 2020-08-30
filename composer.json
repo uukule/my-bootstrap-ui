@@ -1,0 +1,23 @@
+{
+    "name": "uukule/my-bootstrap-ui",
+    "description": "my bootstrap ui",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Mr.Zhang",
+            "email": "zhang@uukule.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "uukule\\BootstrapUi\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    }
+}
