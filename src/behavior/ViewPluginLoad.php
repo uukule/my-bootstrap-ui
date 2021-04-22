@@ -4,6 +4,8 @@
 namespace uukule\BootstrapUi\behavior;
 
 
+use think\Exception;
+
 class ViewPluginLoad
 {
     static protected $domain = '';
@@ -126,7 +128,7 @@ class ViewPluginLoad
      */
     static public function load_plugin($param, string $version = null)
     {
-        $domain = config('view_libs_cdn');
+        $domain = config('view.libs_cdn');
         if (is_string($param)) {
             $param = [$param => $version];
         }
@@ -182,7 +184,7 @@ class ViewPluginLoad
         }
         self::$loaded_list['form'] = true;
 
-        $domain = config('view_libs_cdn');
+        $domain = config('view.libs_cdn');
         $head_file = [
             $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css',
             $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.css',

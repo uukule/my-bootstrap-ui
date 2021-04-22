@@ -3,6 +3,7 @@
 
 namespace uukule\BootstrapUi;
 
+use KubAT\PhpSimple\HtmlDomParser;
 /**
  * Class Panel
  * @package ui\driver\bootstrap
@@ -18,9 +19,7 @@ class Panel
     protected static $is_col = [];
     protected $sign;
 
-    /**
-     * @var bool|\file_get_html|null
-     */
+
     protected $panel = null;
 
 
@@ -31,7 +30,7 @@ class Panel
         if ('/' === $content) {
             return self::end();
         }
-        $panel = file_get_html(__DIR__ . '/template/panel.html');
+        $panel = HtmlDomParser::file_get_html(__DIR__ . '/template/panel.html');
         $panel->find('.panel', 0)->setAttribute('data-sortable-id', 'ui-widget-' . $this->sign);
         $this->panel = $panel;
         return $this;

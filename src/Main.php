@@ -28,7 +28,7 @@ class Main
             $type = $config;
         }else{
             if (empty($config)) {
-                $config = \think\Config::get('ui');
+                $config = config('ui');
             }
             if (is_array($config)) {
                 $this->config = array_merge($this->config, $config);

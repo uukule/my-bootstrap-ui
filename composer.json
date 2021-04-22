@@ -10,7 +10,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.2.0"
+        "php": ">=7.2.0",
+        "kub-at/php-simple-html-dom-parser": "^1.9"
     },
     "autoload": {
         "psr-4": {
