@@ -103,20 +103,20 @@ class ViewPluginLoad
         self::$domain = config('view_libs_cdn');
     }
 
-    public function viewFilter(&$params)
+    public static function viewFilter(string $content) : string
     {
         //判断是否加载验证
-        if (false !== stripos($params, 'data-parsley-validate')) {
+        if (false !== stripos($content, 'data-parsley-validate')) {
             self::load_plugin('parsley.js');
         }
         //判断是否需要代码高亮
-        if (false !== stripos($params, '</code>')) {
+        if (false !== stripos($content, '</code>')) {
             self::load_plugin('highlight.js', '9.12.0');
         }
-        $params = str_replace(
+        return str_replace(
             ['<!--ViewBetweenHead-->', '<!--ViewBetweenBottom-->'],
             [self::$view['head'], self::$view['bottom']],
-            $params
+            $content
         );
     }
 

@@ -65,15 +65,22 @@ class Form
             }
 
             $self = new self();
-            $type = array_key_exists('type', $row) ? array_remove('type', $row) : 'text';
+            if(array_key_exists('type', $row)){
+                $type = $row['type'];
+                unset($row['type']);
+            }else{
+                $type = 'text';
+            }
             if (!array_key_exists('name', $row))
                 $row['name'] = $name;
             foreach ($row as $name => $value) {
                 if(!is_array($value)){
                     $value = [$value];
                 }
+                if('options' === $name){
+                    $value = [$value];
+                }
                 call_user_func_array([$self, $name], $value);
-                //$self->$name($value);
             }
             $dom .= $self->$type();
         }
