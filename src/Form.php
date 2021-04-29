@@ -125,6 +125,14 @@ class Form
             case 'upload_multiple':
                 return call_user_func_array([$this, 'exec'], array_merge([$name], $arguments));
                 break;
+            case 'int':
+                return $this->number();
+                break;
+            case 'bool':
+            case 'boolean':
+            case 'bit':
+                return $this->checkbox_switch();
+                break;
             case 'min':
             case 'max':
             case 'step':
@@ -288,6 +296,7 @@ class Form
             case 'float';
             case 'color':
             case 'hidden':
+            case 'json':
                 $this->attr('type', $type);
                 return $this->common($value);
                 break;
@@ -303,6 +312,14 @@ class Form
             case 'range_datepicker':
             case 'text':
                 return $this->$type($value);
+                break;
+            case 'int':
+                return $this->number();
+                break;
+            case 'bool':
+            case 'boolean':
+            case 'bit':
+                return $this->checkbox_switch();
                 break;
         }
     }

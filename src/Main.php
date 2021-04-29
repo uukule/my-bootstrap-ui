@@ -8,6 +8,7 @@ namespace uukule\BootstrapUi;
  * @author Mr.zhang
  * @create_time 2018-7-14
  * @method Btn btn() Description
+ * @method Form form() 表单调用
  */
 
 class Main
