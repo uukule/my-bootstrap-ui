@@ -8,6 +8,9 @@ use KubAT\PhpSimple\HtmlDomParser;
  * Class InputItem
  * @property string $title
  * @method InputItem title(string $value)
+ * @method InputItem value(string $value)
+ * @method InputItem data(string $name, $value)
+ * @method InputItem attr(string $name, string $value)
  * @package uukule\BootstrapUi
  */
 abstract class InputItem
@@ -16,6 +19,9 @@ abstract class InputItem
 
     public $attr = [];
     public $data = [];
+    public $value = '';
+    public $describedby = null;
+    public $title = null;
 
     /**
      * @var string
@@ -31,6 +37,7 @@ abstract class InputItem
     {
         $this->item_id = md5(microtime());
     }
+
 
 
     public function __set($name, $value)
@@ -50,16 +57,27 @@ abstract class InputItem
         return $this->$name;
     }
 
+    /**
+     * @param $name
+     * @param $arguments
+     * @return $this|string
+     */
     public function __call($name, $arguments)
     {
         switch ($name) {
+            case 'title':
+            case 'value':
+            case 'describedby':
+                $this->$name = $arguments[0];
+                return $this;
+                break;
+            case 'attr':
+            case 'data':
+                $this->$name[$arguments[0]] = $arguments[1];
+                return $this;
+                break;
             default:
-                if (empty($arguments[0])) {
-                    return $this->title;
-                } else {
-                    $this->title = $arguments[0];
-                    return $this;
-                }
+                break;
         }
     }
 
@@ -92,12 +110,22 @@ abstract class InputItem
             $dom->find('input',0)->id = $this->item_id;
         }
         /*************** 结束 设置说明 *****************/
+        /*************** 开始 设置描述 *****************/
+        if(empty($this->describedby)){
+            $dom->find('small',0)->outertext = '';
+        }else{
+            $did = md5(uniqid() . microtime());
+            $dom->find('small',0)->innertext = $this->describedby;
+            $dom->find('input',0)->setAttribute('aria-describedby', $did);
+            $dom->find('small',0)->id = $did;
+        }
+        /*************** 结束 设置描述 *****************/
         /*************** 开始 设置数据值及属性 *****************/
+        $this->attr['value'] = $this->value;
         foreach ($this->data as $k => $v){
             $this->attr["data-{$k}"] = $v;
         }
         foreach ($this->attr as $k=> $v){
-
             $dom->find('input',0)->$k = $v;
         }
 
