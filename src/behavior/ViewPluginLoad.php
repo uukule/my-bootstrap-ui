@@ -57,6 +57,14 @@ class ViewPluginLoad
                 'js/locales/zh.js',
             ]
         ],
+        'bootstrap-table' => [
+            'version' => ['1.18.3'],
+            'head' => ['dist/bootstrap-table.min.css'],
+            'bottom' => [
+                'dist/bootstrap-table.min.js',
+                'dist/extensions/treegrid/bootstrap-table-treegrid.min.js'
+            ]
+        ],
         'parsley.js' => [
             'version' => ['2.8.1'],
             'bottom' => ['parsley.min.js', 'parsley.zh-cn.js']
