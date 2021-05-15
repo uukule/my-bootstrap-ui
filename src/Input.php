@@ -12,18 +12,18 @@ class Input
     {
     }
 
-    public function item($items){
-        if(is_array($items)){
-            foreach ($items as $item){
-                if($item instanceof InputItem){
-                    $this->items[] = $item;
-                }else{
-                    throw new \Exception('非法表单', 10001);
-                }
-            }
-        }elseif($items instanceof InputItem){
-            $this->items[] = $items;
-        }
-    }
+//    public function item($items){
+//        if(is_array($items)){
+//            foreach ($items as $item){
+//                if($item instanceof InputItem){
+//                    $this->items[] = $item;
+//                }else{
+//                    throw new \Exception('非法表单', 10001);
+//                }
+//            }
+//        }elseif($items instanceof InputItem){
+//            $this->items[] = $items;
+//        }
+//    }
 
 }
