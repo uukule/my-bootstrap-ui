@@ -218,6 +218,18 @@ abstract class InputItem
 
         /*************** 结束 设置数据值及属性 *****************/
 
-        return $dom;
+        $backtrace = array_column(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3), 'function');
+        $is_closure = !!array_filter($backtrace, function ($vo){
+            return (bool) stripos($vo, 'closure');
+        });
+        if($is_closure){
+            echo $dom;
+        }else{
+            return $dom;
+        }
+    }
+
+    public function show(){
+        echo $this->out();
     }
 }
