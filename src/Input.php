@@ -2,14 +2,18 @@
 
 namespace uukule\BootstrapUi;
 
+use uukule\BootstrapUi\Doc;
+use KubAT\PhpSimple\HtmlDomParser;
 
 class Input
 {
     public $items = [];
     public $formDemo = '<form class="form-horizontal" data-parsley-validate="true" name="demo-form"></form>';
+    public $formDom;
 
     public function __construct()
     {
+        $this->formDom = HtmlDomParser::str_get_html($this->formDemo);
     }
 
     public function item($items){
@@ -32,7 +36,13 @@ class Input
             $data();
             // 获取并清空缓存
             $content = ob_get_clean();
-            return $content;
+            $this->formDom->find('form', 0)->innertext = $content;
         }
+        return $this;
+    }
+
+    public function show(){
+        $this->formDom->find('form', 0)->innertext .= ui()->btn()->type('submit')->success()->content('提交')->show();
+        return $this->formDom;
     }
 }
