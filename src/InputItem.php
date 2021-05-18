@@ -30,8 +30,6 @@ use KubAT\PhpSimple\HtmlDomParser;
  * @method $this title(string $value)
  * @method $this value(string $value)
  * @method $this placeholder(string $value)
- * @method $this data(string $name, $value)
- * @method $this attr(string $name, string $value)
  * @method $this maxlength(int $value)
  * @method $this name(string $value)
  * @method $this pattern(string $value)
@@ -47,6 +45,7 @@ abstract class InputItem
         'attr' => [],
         'data' => [],
         'value' => '',
+        'name'  => '',
         'placeholder' => '',
         'describedby' => null,
         'title' => null,
@@ -65,8 +64,10 @@ abstract class InputItem
 
     public function __construct(array $options = [])
     {
-        if(!empty($options)){
-            $this->options = $options;
+        if (!empty($options)) {
+            foreach ($options as $name => $value) {
+                $this->__call($name, [$value]);
+            }
         }
         $this->item_id = md5(microtime());
     }
@@ -93,13 +94,10 @@ abstract class InputItem
         switch ($name) {
             case 'title':
             case 'value':
+            case 'name':
             case 'describedby':
             case 'placeholder':
                 $this->options[$name] = $arguments[0];
-                break;
-            case 'attr':
-            case 'data':
-                $this->options[$name][$arguments[0]] = $arguments[1];
                 break;
             case 'xs':
             case 'sm':
@@ -119,11 +117,42 @@ abstract class InputItem
     }
 
     /**
+     * @param string|array $arguments
+     * @param string|int $value
+     * @return InputItem
+     */
+    public function data($arguments, $value = null): InputItem
+    {
+        if(is_array($arguments)){
+            $this->options['data'] = array_merge($this->options['data'], $arguments);
+        }else{
+            $this->options['data'][$arguments] = $value;
+        }
+        return $this;
+    }
+
+    /**
+     * @param string|array $arguments
+     * @param string|int $value
+     * @return InputItem
+     */
+    public function attr($arguments, $value = null): InputItem
+    {
+        if(is_array($arguments)){
+            $this->options['attr'] = array_merge($this->options['data'], $arguments);
+        }else{
+            $this->options['attr'][$arguments] = $value;
+        }
+        return $this;
+    }
+
+    /**
      * 设置禁用状态
      * @param bool $value
      * @return $this
      */
-    public function disabled(bool $value = true){
+    public function disabled(bool $value = true)
+    {
         $this->options['disabled'] = $value;
         return $this;
     }
@@ -133,7 +162,8 @@ abstract class InputItem
      * @param bool $value
      * @return $this
      */
-    public function readonly(bool $value = true){
+    public function readonly(bool $value = true)
+    {
         $this->options['readonly'] = $value;
         return $this;
     }
@@ -143,19 +173,33 @@ abstract class InputItem
      * @param bool $value
      * @return $this
      */
-    public function required(bool $value = true){
+    public function required(bool $value = true)
+    {
         $this->options['required'] = $value;
         return $this;
     }
 
 
-
-
-    public function col(int $xs = 12, int $sm = null, int $md = null, int $lg = null)
+    /**
+     * @param int|array $xs
+     * @param int|null $sm
+     * @param int|null $md
+     * @param int|null $lg
+     * @return $this
+     */
+    public function col($xs = 12, int $sm = null, int $md = null, int $lg = null)
     {
-        $sm = $sm ?? $xs;
-        $md = $md ?? $sm;
-        $lg = $lg ?? $md;
+        if(is_array($xs)){
+            $arg = $xs;
+            $xs = $arg[0];
+            $sm = $arg[1] ?? $xs;
+            $md = $arg[2] ?? $sm;
+            $lg = $arg[3] ?? $md;
+        }else{
+            $sm = $sm ?? $xs;
+            $md = $md ?? $sm;
+            $lg = $lg ?? $md;
+        }
         $this->options['col'] = [$xs, $sm, $md, $lg];
         return $this;
     }
@@ -166,7 +210,8 @@ abstract class InputItem
         return $this;
     }
 
-    public function show(){
+    public function show()
+    {
         echo $this->out();
     }
 }

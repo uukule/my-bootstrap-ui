@@ -91,10 +91,15 @@ class ViewPluginLoad
             'version' => ['1.1.0'],
             'head' => ['base64.min.js']
         ],
+        'bootstrap-daterangepicker' => [
+            'version' => ['3.1'],
+            'head' => ['daterangepicker.min.css'],
+            'bottom' => ['moment.min.js', 'daterangepicker.min.js']
+        ],
         'eonasdan-bootstrap-datetimepicker' => [
             'version' => ['4.17.47'],
-            'head' => 'build/css/bootstrap-datetimepicker.min.css',
-            'bottom' => 'build/js/bootstrap-datetimepicker.min.js'
+            'head' => 'css/bootstrap-datetimepicker.min.css',
+            'bottom' => 'js/bootstrap-datetimepicker.min.js'
         ]
     ];
 
@@ -197,7 +202,6 @@ class ViewPluginLoad
             $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-select/bootstrap-select.min.css',
             $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css',
             $domain . '/color-admin/4.2-BS4/assets/plugins/jquery-tag-it/css/jquery.tagit.css',
-            $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-daterangepicker/daterangepicker.css',
             $domain . '/color-admin/4.2-BS4/assets/plugins/select2/dist/css/select2.min.css',
             $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-colorpalette/css/bootstrap-colorpalette.css',
         ];
@@ -216,8 +220,6 @@ class ViewPluginLoad
             $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js',
             $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput-typeahead.js',
             $domain . '/color-admin/4.2-BS4/assets/plugins/jquery-tag-it/js/tag-it.min.js',
-            $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-daterangepicker/moment.js',
-            $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-daterangepicker/daterangepicker.js',
             $domain . '/color-admin/4.2-BS4/assets/plugins/select2/dist/js/select2.min.js',
             $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-show-password/bootstrap-show-password.js',
             $domain . '/color-admin/4.2-BS4/assets/plugins/bootstrap-colorpalette/js/bootstrap-colorpalette.js',

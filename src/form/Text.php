@@ -19,8 +19,7 @@ class Text extends InputItem
 
     public function __construct(array $option = [])
     {
-        $this->options['attr']['type'] = 'text';
-        $this->options['feedback'] = false;
+        $options['attr']['type'] = 'text';
         parent::__construct($option);
     }
 
