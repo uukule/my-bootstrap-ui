@@ -94,7 +94,7 @@ class ViewPluginLoad
         'bootstrap-daterangepicker' => [
             'version' => ['3.1'],
             'head' => ['daterangepicker.min.css'],
-            'bottom' => ['moment.min.js', 'daterangepicker.min.js']
+            'bottom' => ['moment.min.js', 'locale/zh-cn.js', 'daterangepicker.min.js']
         ],
         'eonasdan-bootstrap-datetimepicker' => [
             'version' => ['4.17.47'],
