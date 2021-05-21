@@ -13,9 +13,18 @@ use KubAT\PhpSimple\HtmlDomParser;
  * @property bool $feedback
  * @package uukule\BootstrapUi\form
  */
-class Text extends InputItem
+class Switcher extends InputItem
 {
-    protected $inTemp = '<div class="form-group"><label></label><small><span class="text-danger"></span></small><input type="text" class="form-control" ><span class="fas form-control-feedback" aria-hidden="true"></span><small id="" class="form-text text-muted"></small></div>';
+    protected $temp = [
+        'default'=>'<div class="form-group"><label></label><small><span class="text-danger"></span></small>
+
+<div class="switcher">
+    <input type="checkbox" >
+    <label for=""></label>
+</div>
+<span class="fas form-control-feedback" aria-hidden="true"></span></div>'
+    ];
+
 
     public function __construct(array $option = [])
     {
@@ -30,12 +39,18 @@ class Text extends InputItem
 
 
 
+    public function options(array $data){
+        $this->options['options'] = $data;
+        return $this;
+    }
+
+
     /**
      * @return mixed
      */
     public function out()
     {
-        $dom = HtmlDomParser::str_get_html($this->inTemp);
+        $dom = HtmlDomParser::str_get_html($this->temp['default']);
         $formGroupClass = $dom->find('.form-group', 0)->class;
         $formGroupClass = explode(' ', $formGroupClass);
         /*************** 开始 设置样式 *****************/
@@ -47,59 +62,51 @@ class Text extends InputItem
         $dom->find('.form-group', 0)->class = join(' ', $formGroupClass);
         /*************** 结束 设置样式 *****************/
 
-
         /*************** 开始 设置说明 *****************/
         if (empty($this->options['title'])) {
             $dom->find('label', 0)->outertext = '';
         } else {
             $dom->find('label', 0)->innertext =  $this->options['title'];
             $dom->find('label', 0)->for = $this->item_id;
-            $dom->find('input', 0)->id = $this->item_id;
         }
         /*************** 结束 设置说明 *****************/
         /*************** 开始 设置描述与备注 *****************/
-        if (empty($this->options['describedby'])) {
-            $dom->find('small', 1)->outertext = '';
-        } else {
-            $did = md5(uniqid() . microtime());
-            $dom->find('small', 1)->innertext = $this->options['describedby'];
-            $dom->find('input', 0)->setAttribute('aria-describedby', $did);
-            $dom->find('small', 1)->id = $did;
-        }
         if (empty($this->options['remind'])) {
             $dom->find('small', 0)->outertext = '';
         } else {
             $dom->find('small>span', 0)->innertext = ' * ' . $this->options['remind'];
         }
         /*************** 结束 设置描述 *****************/
+
+        /*************** 开始 设置选项值 *****************/
+
+        $dom->find('input', 0)->name = $this->options['name'];
+        $dom->find('input', 0)->value = 1;
+        $dom->find('input', 0)->id = $this->item_id;
+        $dom->find('.switcher label', 0)->for = $this->item_id;
+        if((bool) $this->options['value']){
+            $dom->find('input', 0)->checked = true;
+        }
+        /*************** 结束 设置选项值 *****************/
+
         /*************** 开始 设置数据值及属性 *****************/
-        $this->options['attr']['value'] = $this->options['value'];
-        foreach ($this->data as $k => $v) {
-            $this->options['attr']["data-{$k}"] = $v;
-        }
-        foreach ($this->options['attr'] as $k => $v) {
-            $dom->find('input', 0)->$k = $v;
-        }
-
-        if($this->options['disabled']){
-            $dom->find('input', 0)->disabled = true;
-        }
-        if($this->options['readonly']){
-            $dom->find('input', 0)->readonly = true;
-        }
-        if($this->options['required']){
-            $dom->find('input', 0)->required = true;
-        }
-
+//        foreach ($this->data as $k => $v) {
+//            $this->options['attr']["data-{$k}"] = $v;
+//        }
+//        foreach ($this->options['attr'] as $k => $v) {
+//            $dom->find('select', 0)->$k = $v;
+//        }
+//
+//        if($this->options['disabled']){
+//            $dom->find('select', 0)->disabled = true;
+//        }
+//        if($this->options['readonly']){
+//            $dom->find('select', 0)->readonly = true;
+//        }
+//        if($this->options['required']){
+//            $dom->find('select', 0)->required = true;
+//        }
         /*************** 结束 设置数据值及属性 *****************/
-        /*************** 开始 追加内容 *****************/
-        if($this->options['before']){
-            $dom->find('input', 0)->outertext = $this->options['before'] . $dom->find('input', 0)->outertext;
-        }
-        if($this->options['after']){
-            $dom->find('input', 0)->outertext .= $this->options['after'];
-        }
-        /*************** 结束 追加内容 *****************/
 
         $backtrace = array_column(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3), 'function');
         $is_closure = !!array_filter($backtrace, function ($vo){

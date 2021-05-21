@@ -22,13 +22,15 @@ use KubAT\PhpSimple\HtmlDomParser;
  * @method $this md() 中等尺寸
  * @method $this lg() 大尺寸
  * @method $this size(string $value) 尺寸
+ * @method $this before(string $value) 在前面追加
+ * @method $this after(string $value) 在后面追加
  * @method $this success() Input with success
  * @method $this warning() Input with warning
  * @method $this info() Input with info
  * @method $this error() Input with error
  * @method $this status(string $value) 样式
  * @method $this title(string $value)
- * @method $this value(string $value)
+ * @method $this value(string|array $value)
  * @method $this placeholder(string $value)
  * @method $this maxlength(int $value)
  * @method $this name(string $value)
@@ -55,6 +57,8 @@ abstract class InputItem
         'required' => false, //是否必须
         'disabled' => false, //是否禁用
         'readonly' => false, //只读
+        'before' => null,
+        'after'  => null,
     ];
 
     /**
@@ -97,6 +101,8 @@ abstract class InputItem
             case 'name':
             case 'describedby':
             case 'placeholder':
+            case 'before':
+            case 'after':
                 $this->options[$name] = $arguments[0];
                 break;
             case 'xs':

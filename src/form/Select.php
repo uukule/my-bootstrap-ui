@@ -13,9 +13,9 @@ use KubAT\PhpSimple\HtmlDomParser;
  * @property bool $feedback
  * @package uukule\BootstrapUi\form
  */
-class Text extends InputItem
+class Select extends InputItem
 {
-    protected $inTemp = '<div class="form-group"><label></label><small><span class="text-danger"></span></small><input type="text" class="form-control" ><span class="fas form-control-feedback" aria-hidden="true"></span><small id="" class="form-text text-muted"></small></div>';
+    protected $inTemp = '<div class="form-group"><label></label><small><span class="text-danger"></span></small><select type="text" class="form-control" ></select><span class="fas form-control-feedback" aria-hidden="true"></span><small id="" class="form-text text-muted"></small></div>';
 
     public function __construct(array $option = [])
     {
@@ -28,6 +28,12 @@ class Text extends InputItem
         return $self->__call($name, $arguments);
     }
 
+
+
+    public function options(array $data){
+        $this->options['options'] = $data;
+        return $this;
+    }
 
 
     /**
@@ -54,7 +60,7 @@ class Text extends InputItem
         } else {
             $dom->find('label', 0)->innertext =  $this->options['title'];
             $dom->find('label', 0)->for = $this->item_id;
-            $dom->find('input', 0)->id = $this->item_id;
+            $dom->find('select', 0)->id = $this->item_id;
         }
         /*************** 结束 设置说明 *****************/
         /*************** 开始 设置描述与备注 *****************/
@@ -63,7 +69,7 @@ class Text extends InputItem
         } else {
             $did = md5(uniqid() . microtime());
             $dom->find('small', 1)->innertext = $this->options['describedby'];
-            $dom->find('input', 0)->setAttribute('aria-describedby', $did);
+            $dom->find('select', 0)->setAttribute('aria-describedby', $did);
             $dom->find('small', 1)->id = $did;
         }
         if (empty($this->options['remind'])) {
@@ -72,34 +78,35 @@ class Text extends InputItem
             $dom->find('small>span', 0)->innertext = ' * ' . $this->options['remind'];
         }
         /*************** 结束 设置描述 *****************/
+
+        /*************** 开始 设置选项值 *****************/
+        $opeionsDom = [];
+        foreach ($this->options['options'] as $value => $name){
+            $selected = $value == $this->options['value'] ? 'selected':'';
+            $opeionsDom[] = "<option value=\"{$value}\" {$selected}>{$name}</option>";
+        }
+        $dom->find('select', 0)->innertext = join('', $opeionsDom);
+
+        /*************** 结束 设置选项值 *****************/
+
         /*************** 开始 设置数据值及属性 *****************/
-        $this->options['attr']['value'] = $this->options['value'];
         foreach ($this->data as $k => $v) {
             $this->options['attr']["data-{$k}"] = $v;
         }
         foreach ($this->options['attr'] as $k => $v) {
-            $dom->find('input', 0)->$k = $v;
+            $dom->find('select', 0)->$k = $v;
         }
 
         if($this->options['disabled']){
-            $dom->find('input', 0)->disabled = true;
+            $dom->find('select', 0)->disabled = true;
         }
         if($this->options['readonly']){
-            $dom->find('input', 0)->readonly = true;
+            $dom->find('select', 0)->readonly = true;
         }
         if($this->options['required']){
-            $dom->find('input', 0)->required = true;
+            $dom->find('select', 0)->required = true;
         }
-
         /*************** 结束 设置数据值及属性 *****************/
-        /*************** 开始 追加内容 *****************/
-        if($this->options['before']){
-            $dom->find('input', 0)->outertext = $this->options['before'] . $dom->find('input', 0)->outertext;
-        }
-        if($this->options['after']){
-            $dom->find('input', 0)->outertext .= $this->options['after'];
-        }
-        /*************** 结束 追加内容 *****************/
 
         $backtrace = array_column(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3), 'function');
         $is_closure = !!array_filter($backtrace, function ($vo){
