@@ -9,6 +9,7 @@ namespace uukule\BootstrapUi;
  * @create_time 2018-7-14
  * @method Btn btn() Description
  * @method Form form() 表单调用
+ * @method Panel panel()
  */
 
 class Main

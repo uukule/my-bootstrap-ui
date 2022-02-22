@@ -1,16 +1,16 @@
 <?php
 
 
-namespace uukule\BootstrapUi\behavior;
+namespace uukule\BootstrapUi\Core;
 
 
-use think\Exception;
+use \Exception;
 
-class ViewPluginLoad
+class Plugin
 {
     static protected $domain = '';
 
-    static protected $view = [
+    static public $view = [
         'head' => '',
         'bottom' => ''
     ];
@@ -26,107 +26,12 @@ class ViewPluginLoad
         'lodash' => '',
     ];
 
-    static public $list = [
-        'jquery' => [
-            'version' => ['1.9.1', '2.0.3', '3.3.1'],
-            'head' => 'jquery.min.js'
-        ],
-        'axios' => [
-            'version' => ['0.12.0'],
-            'head' => ['axios.min.js']
-        ],
-        'lodash' => [
-            'version' => ['4.13.1'],
-            'head' => ['lodash.min.js']
-        ],
-        'vue' => [
-            'version' => ['2.3.3'],
-            'head' => 'vue.min.js'
-        ],
-        'bootstrap' => [
-            'version' => ['4.1.3'],
-            'head' => 'css/bootstrap.min.css',
-            'bottom' => 'js/bootstrap.bundle.min.js'
-        ],
-        'bootstrap-fileinput' => [
-            'version' => ['4.5.0'],
-            'head' => ['css/fileinput.css', 'themes/explorer-fa/theme.min.css', 'css/glyphicon.css'],
-            'bottom' => [
-                'js/fileinput.min.js',
-                'themes/explorer-fa/theme.min.js',
-                'js/locales/zh.js',
-            ]
-        ],
-        'bootstrap-table' => [
-            'version' => ['1.18.3'],
-            'head' => ['dist/bootstrap-table.min.css'],
-            'bottom' => [
-                'dist/bootstrap-table.min.js',
-                'dist/extensions/treegrid/bootstrap-table-treegrid.min.js'
-            ]
-        ],
-        'parsley.js' => [
-            'version' => ['2.8.1'],
-            'bottom' => ['parsley.min.js', 'parsley.zh-cn.js']
-        ],
-        'jquery-treegrid' => [
-            'version' => ['0.3.0'],
-            'head' => ['css/jquery.treegrid.css'],
-            'bottom' => ['js/jquery.treegrid.min.js']
-        ],
-        'summernote' => [
-            'note' => '富文本编辑器',
-            'version' => ['0.8.16'],
-            'head' => 'summernote.min.css',
-            'bottom' => ['summernote.min.js', 'theme/color-admin/form-summernote.demo.min.js']
-        ],
-        'highlight.js' => [
-            'version' => ['9.12.0', '10.0.3'],
-            'bottom' => ['highlight.js']
-        ],
-        'jquery-simplecolorpicker' => [
-            'version' => ['0.3.1'],
-            'head' => ['jquery.simplecolorpicker.css', 'jquery.simplecolorpicker-fontawesome.css', 'jquery.simplecolorpicker-glyphicons.css'],
-            'bottom' => ['jquery.simplecolorpicker.js']
 
-        ],
-        'bootstrap-datepicker' => [
-            'version' => '1.8.0',
-            'head' => ['bootstrap-datepicker.min.css', 'bootstrap-datepicker3.min.css'],
-            'bottom' => ['bootstrap-datepicker.min.js']
-        ],
-        'base64.js' => [
-            'version' => ['1.1.0'],
-            'head' => ['base64.min.js']
-        ],
-        'eonasdan-bootstrap-datetimepicker' => [
-            'version' => ['4.17.47'],
-            'head' => 'build/css/bootstrap-datetimepicker.min.css',
-            'bottom' => 'build/js/bootstrap-datetimepicker.min.js'
-        ]
-    ];
-
-    public function run(&$params)
+    public function __construct()
     {
-        self::$domain = config('view_libs_cdn');
+        self::$domain = config('view_plugin.libs_cdn');
     }
 
-    public static function viewFilter(string $content) : string
-    {
-        //判断是否加载验证
-        if (false !== stripos($content, 'data-parsley-validate')) {
-            self::load_plugin('parsley.js');
-        }
-        //判断是否需要代码高亮
-        if (false !== stripos($content, '</code>')) {
-            self::load_plugin('highlight.js', '9.12.0');
-        }
-        return str_replace(
-            ['<!--ViewPluginHead-->', '<!--ViewPluginBottom-->'],
-            [self::$view['head'], self::$view['bottom']],
-            $content
-        );
-    }
 
     /**
      * 加载插件
@@ -136,10 +41,11 @@ class ViewPluginLoad
      */
     static public function load_plugin($param, string $version = null)
     {
-        $domain = config('view.libs_cdn');
+        $domain =  config('view_plugin.libs_cdn');
         if (is_string($param)) {
             $param = [$param => $version];
         }
+        $list = (new \uukule\BootstrapUi\Config\Plugin())->list;
         foreach ($param as $plugin => $version) {
             if (is_int($plugin)) {
                 $plugin = $version;
@@ -148,15 +54,15 @@ class ViewPluginLoad
             if (array_key_exists($plugin, self::$loaded_list)) {
                 continue;
             }
-            if (!array_key_exists($plugin, self::$list)) {
+            if (!array_key_exists($plugin, $list)) {
                 throw new Exception('插件不存在！');
             }
             if (empty($version)) {
-                $version = self::$list[$plugin]['version'][0];
+                $version = $list[$plugin]['version'][0];
             }
             self::$loaded_list[$plugin] = $version;
-            if (array_key_exists('head', self::$list[$plugin])) {
-                $file_list = self::$list[$plugin]['head'];
+            if (array_key_exists('head', $list[$plugin])) {
+                $file_list = $list[$plugin]['head'];
                 if (is_string($file_list)) {
                     $file = $domain . '/' . $plugin . '/' . $version . '/' . $file_list;
 
@@ -168,8 +74,8 @@ class ViewPluginLoad
                     }
                 }
             }
-            if (array_key_exists('bottom', self::$list[$plugin])) {
-                $file_list = self::$list[$plugin]['bottom'];
+            if (array_key_exists('bottom', $list[$plugin])) {
+                $file_list = $list[$plugin]['bottom'];
                 if (is_string($file_list)) {
                     $file = $domain . '/' . $plugin . '/' . $version . '/' . $file_list;
                     self::$view['bottom'] .= self::include_file($file);

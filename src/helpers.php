@@ -24,6 +24,6 @@ if (!function_exists('ui')) {
 if (!function_exists('load_plugin')) {
     function load_plugin($param, string $version = null)
     {
-        \uukule\BootstrapUi\behavior\ViewPluginLoad::load_plugin($param, $version);
+        \uukule\BootstrapUi\Core\Plugin::load_plugin($param, $version);
     }
 }

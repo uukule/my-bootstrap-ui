@@ -152,7 +152,7 @@ class Form
     public function name(string $value)
     {
         $this->attr['name'] = $value;
-        $data = request()->param();
+        $data = request()->all();
         if (is_null($this->value)) {
             $this->value = $data[$value] ?? '';
         }
@@ -328,7 +328,6 @@ class Form
     {
         $this->before_exec($value);
         $this->attr('value', $this->value);
-        $this->attr('type', 'text');
         $datalist = $this->attr('datalist');
         if (!is_null($datalist) && is_array($datalist)) {
             $_id = "input-id-" . rand(0, 999999999);
@@ -652,10 +651,7 @@ class Form
         $remind = $this->remind . '<br>';
         $value = is_array($this->value) ? $this->value : [];
         $name = $this->attr['name'];
-        $li_dom = "<label class=\"checkbox-inline\" style=\"margin-right: 10px;\">
-<input type=\"radio\" name=\"%s\" %s value=\"%s\">
- %s 
- </label>";
+        $li_dom = '<label class="checkbox-inline" style="margin-right: 10px;"><input type="radio" name="%s" %s value="%s"> %s </label>';
         $dom = '';
         foreach ($options as $v => $n) {
             $checked = in_array($v, $value) ? ' checked="checked" ' : '';
