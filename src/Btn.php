@@ -196,4 +196,34 @@ class Btn {
         return $this->show();
     }
 
+    /**
+     * 编辑
+     * @param $url
+     * @return string
+     */
+    public function edit($url):string
+    {
+        return $this->success()
+            ->icon('edit')
+            ->content('编辑')
+            ->href($url)
+            ->show();
+    }
+
+    /**
+     * 删除
+     * @param $url
+     * @return string
+     */
+    public function delete($url):string
+    {
+        return $this->danger()
+            ->icon('trash-alt')
+            ->content('删除')
+            ->data('click', 'ajax')
+            ->data('method', 'delete')
+            ->href($url)
+            ->show();
+    }
+
 }

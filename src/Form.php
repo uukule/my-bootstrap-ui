@@ -152,7 +152,7 @@ class Form
     public function name(string $value)
     {
         $this->attr['name'] = $value;
-        $data = request()->param();
+        $data = request()->all();
         if (is_null($this->value)) {
             $this->value = $data[$value] ?? '';
         }
