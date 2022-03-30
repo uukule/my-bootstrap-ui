@@ -23,7 +23,6 @@ class ViewPluginMiddleware
         }
         $content = $response->getContent();
 
-
         //判断是否加载验证
         if (false !== stripos($content, 'data-parsley-validate')) {
             Plugin::load_plugin('parsley.js');
@@ -33,7 +32,7 @@ class ViewPluginMiddleware
             Plugin::load_plugin('highlight.js', '9.12.0');
         }
         $content =  str_replace(
-            ['<!--ViewPluginHead-->', '<!--ViewBetweenBottom-->'],
+            ['<!--ViewPluginHead-->', '<!--ViewPluginBottom-->'],
             [Plugin::$view['head'], Plugin::$view['bottom']],
             $content
         );
