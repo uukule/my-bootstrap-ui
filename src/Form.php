@@ -468,7 +468,7 @@ class Form
         </div>
         <div class='tab-pane fade' id='view-picurl-{$id_name}'>
             <label class='control-label'>请填写文件的网址:</label>
-            <input class='form-control' type='text' id='js-fileinput-val' value='{$value}' name='{$name}' />
+            <input class='form-control' type='text' id='view-picurl-{$id_name}-text' value='{$value}' name='{$name}' />
         </div>
     </div>";
 
