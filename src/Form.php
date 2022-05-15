@@ -173,6 +173,7 @@ class Form
     {
         $dom = '<label  class="control-label" for="%s">%s</label>';
         $this->label = sprintf($dom, $this->attr['id'], $value);
+        $this->title = $value;
         return $this;
     }
 
@@ -468,7 +469,7 @@ class Form
         </div>
         <div class='tab-pane fade' id='view-picurl-{$id_name}'>
             <label class='control-label'>请填写文件的网址:</label>
-            <input class='form-control' type='text' id='view-picurl-{$id_name}-text' value='{$value}' name='{$name}' />
+            <input class='form-control' type='text' id='js-fileinput-val' value='{$value}' name='{$name}' />
         </div>
     </div>";
 
@@ -585,8 +586,17 @@ class Form
         if (!$this->data('image-upload-url')) {
             $this->data('image-upload-url', config('storage.image')['url']);
         }
-        $dom = '<textarea class="summernote"  %s >%s</textarea>';
-        $dom = sprintf($dom, $this->join_attr(), $this->value);
+        $dom = '
+
+					<div class="panel panel-inverse m-b-0 col-sm-12">
+						<div class="panel-heading">
+							<h4 class="panel-title"> %s </h4>
+						</div>
+						<div class="panel-body p-0" style="border: rgb(36,42,49) 1px solid;border-top: none;">
+<textarea class="summernote"  %s >%s</textarea>
+						</div>
+					</div>';
+        $dom = sprintf($dom,$this->title, $this->join_attr(), $this->value);
         return $dom;
         return sprintf($this->box, $this->label, $this->remind, $dom);
     }
